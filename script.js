@@ -1,15 +1,14 @@
 const inputRange = document.getElementById("password-length");
 const inputValue = document.getElementById("display-password-length");
-const btnGeneratorPassword = document.getElementById( "generate-password");
+const textGenMdp = document.getElementById("password-output");
+const btnGeneratorPassword = document.getElementById("generate-password");
+const alertEmptyPassword = document.querySelector('.audun_warn');
 
 let resultat = "";
 let alphabet = "abcdefghijklmnopqrstuvwxyz";
+let alphabetUppercase = alphabet.toUpperCase();
 let nombre = "1234567890";
 let symbol = "?./§M%¨£µ%°+[|#{~#^@~";
-
-// Méthode variable
-let alphabetTaille = alphabet.length;
-let alphabetUppercase = alphabet.toUpperCase();
 
 // Le input VALUE récupère la value du input RANGE
 
@@ -17,56 +16,44 @@ inputRange.addEventListener("input", (e) => {
   inputValue.value = e.target.value;
 });
 
-
-
-//////////////////////
-////// FONCTION
-//////////////////////
-
-// Generateur mot de passe MINUSCULE
-
-const genPwdMinuscule = (valuePassword) => {
-  for (let i = 0; i < valuePassword; i++) {
-    resultat += alphabet.charAt(
-      Math.floor(Math.random() * alphabetTaille)
-    );
+function generatePassword() {
+  let data = [];
+  resultat = 0;
+  if (lowercase.checked) {
+    data.push(...alphabet);
   }
-  return resultat;
-  
-};
-
-// Generateur mot de passe MAJUSCULE
-
-const genPwdMajuscule = (taille) => {
-  for (let i = 0; i < taille; i++) {
-    resultat += alphabetUppercase.charAt(
-      Math.floor(Math.random() * alphabetTaille)
-    );
+  if (uppercase.checked) {
+    data.push(...alphabetUppercase);
+  }
+  if (number.checked) {
+    data.push(...nombre);
+  }
+  if (symbols.checked) {
+    data.push(...symbol);
   }
 
-  return resultat;
-};
+  if (data.length >= 1) {
 
-// Generateur mot de passe NOMBRE
+    for (i = 0; i < inputValue.value; i++) {
+      resultat += data[Math.floor(Math.random() * data.length)];
+    }
 
-const genPwdNombre = (taille) => {
-  for (let i = 0; i < taille; i++) {
-    resultat += nombre.charAt(
-      Math.floor(Math.random() * nombre.length)
-    );
+    textGenMdp.value = resultat;
+    alertEmptyPassword.style.setProperty('display','none')
+
+    textGenMdp.select();
+    document.execCommand('copy');
+    btnGeneratorPassword.textContent = "Copié !";
+    setTimeout(() => {
+      btnGeneratorPassword.textContent = "Génerer un mot de passe";
+    },1000);
+
+
+  } else{
+
+    alertEmptyPassword.style.setProperty('display','block')
+    textGenMdp.value = "Générateur de mot de passe";
   }
-  return resultat;
-};
+}
 
-// Generateur mot de passe SYMBOL
-
-const genPwdSymbols = (taille) => {
-  for (let i = 0; i < taille; i++) {
-    resultat += symbol.charAt(
-      Math.floor(Math.random() * symbol.length)
-    );
-  }
-
-  return resultat;
-};
-
+btnGeneratorPassword.addEventListener("click", generatePassword);
